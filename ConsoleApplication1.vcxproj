@@ -124,6 +124,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleApplication1.cpp" />
+    <ClCompile Include="PST_C01.cpp" />
+    <ClCompile Include="PST_C02.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PST_C02.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
