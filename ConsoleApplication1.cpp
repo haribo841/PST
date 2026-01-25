@@ -2,11 +2,13 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
-#include "PST_C02.h" // Dołączenie naszego pliku nagłówkowego
+#include "PST_C02.h"
+#include "PST_C03.h"
 
 using namespace std;
 
-int main() {
+static void old()
+{
     double a_min, a_max, a_step;
     int C, m;
 
@@ -37,7 +39,7 @@ int main() {
 
     if (!file_block.is_open() || !file_resources.is_open()) {
         cerr << "Blad otwarcia plikow do zapisu!" << endl;
-        return 1;
+        return;
     }
 
     file_block << fixed << setprecision(6);
@@ -71,8 +73,7 @@ int main() {
         file_block << current_a;
         for (int i = 0; i < m; ++i) {
             double E_i = 0.0;
-            // Suma p[n] dla stanów blokujących (C - t_i + 1 do C)
-                int start_idx = C - streams[i].t + 1;
+            int start_idx = C - streams[i].t + 1;
             if (start_idx < 0) start_idx = 0;
 
             for (int n = start_idx; n <= C; ++n) {
@@ -93,10 +94,9 @@ int main() {
             double row_sum = 0.0;
             for (int i = 0; i < m; ++i) {
                 double y_i = 0.0;
-                // Obliczanie y_i(n)
-                    if ((n - streams[i].t >= 0) && (p[n] > 1e-20)) {
-                        y_i = (streams[i].a_i * streams[i].t * p[n - streams[i].t]) / p[n];
-                    }
+                if ((n - streams[i].t >= 0) && (p[n] > 1e-20)) {
+                    y_i = (streams[i].a_i * streams[i].t * p[n - streams[i].t]) / p[n];
+                }
                 file_resources << "\t" << y_i;
                 row_sum += y_i;
             }
@@ -110,5 +110,21 @@ int main() {
     file_resources.close();
 
     cout << "Zakonczono. Wyniki w plikach txt." << endl;
+}
+
+int main(int argc, char* argv[])
+{
+    // Przygotowanie parametow dla wymiarowania
+    wymiarowanie::Params params;
+    // Przykład:
+    // params.Ci = {10, 8, 12};
+    // params.Bj_list = {0.01, 0.05};
+
+    // Wywołanie obliczen i zapis wyników
+    wymiarowanie::compute_and_write(params);
+
+    // Stare zadanie
+    // old();
+
     return 0;
 }
