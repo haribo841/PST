@@ -115,16 +115,41 @@ static void old()
 int main(int argc, char* argv[])
 {
     // Przygotowanie parametow dla wymiarowania
-    wymiarowanie::Params params;
+    //wymiarowanie::Params params;
     // Przykład:
     // params.Ci = {10, 8, 12};
     // params.Bj_list = {0.01, 0.05};
 
     // Wywołanie obliczen i zapis wyników
-    wymiarowanie::compute_and_write(params);
+    //wymiarowanie::compute_and_write(params);
 
     // Stare zadanie
     // old();
+    try {
+        double amin = 0.1;
+        double amax = 1.0;
+        double astep = 0.1;
+        int C = 10;
+        int Q = 3;
+        int m = 2;
+        std::vector<int> ci0 = { 1, 2 };
+        std::vector<int> ci1 = { 2, 3 };
+        std::string out_filename = "wynik.txt";
 
+        auto results = loss::run_calculation(amin, amax, astep, C, Q, m, ci0, ci1, out_filename);
+
+        std::cout << "Zakonczono obliczenia, zapisano do: " << out_filename << "\n";
+        // Wyświetlenie krótkiego podsumowania
+        for (const auto& row : results) {
+            std::cout << "a=" << row.first << "  E: ";
+            for (double e : row.second) std::cout << e << " ";
+            std::cout << "\n";
+        }
+        return 0;
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "Blad: " << ex.what() << "\n";
+        return 1;
+    }
     return 0;
 }
